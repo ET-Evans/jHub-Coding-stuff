@@ -2,21 +2,29 @@ import random
 import os
 import time
 import sys
+import string
 
 def get_new_word(): # opens the word file, picks a random number and sets the contents of that line to the selected word
     randNumber = random.randint(0, 99)
-    file = open('word_list.txt', 'r')
+    try:
+        file = open('word_list.txt', 'r')
+    except FileNotFoundError:
+        print('No file called "word_list.txt" was found!')
+        time.sleep(2)
+        sys.exit()
     words = file.readlines()
-    word = words[randNumber]
+    randNumber = random.randint(0, len(words) - 1)
+    unstrippedWord = words[randNumber]
+    word = unstrippedWord.rstrip()
     return word
 
 
 def validate(guess, guessedLetters):  # test if it's just a single letter that's not been guessed before
-    if len(guess) > 1:
+    if len(guess) > 1 or len(guess) == 0:
         code = 0
     else:
         guess = guess.lower()
-        if guess not in 'abcdefghijklmnopqrstuvwxyz':
+        if guess not in string.ascii_lowercase:
             code = 0
         else:
             if guess in guessedLetters:
